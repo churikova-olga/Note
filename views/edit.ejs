@@ -1,0 +1,16 @@
+<div style="display: flex; height: 100vh; justify-content: center; align-items: center">
+    <form style="padding: 30px; width: 50%; border: 2px solid rgba(0, 0, 0, 0.2); border-radius: 20px;  background-color:rgba(92, 136, 247, 0.4); box-shadow: 0 0 10px rgba(0,0,0,0.5); "
+          action="/edit/<%=note[0].idNote%>" method="post">
+        <h1 class="mb-3">Редактировать</h1>
+        <div class="mb-3">
+            <label for="title" class="form-label">Название </label>
+            <input type="text" class="form-control" id="title" name="title" value="<%=note[0].title%>" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <textarea class="form-control" id="description" name="description" rows="6"><%=note[0].description%></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+        <a class="btn btn-primary" style="float: right" href="/">Назад</a>
+    </form>
+</div>

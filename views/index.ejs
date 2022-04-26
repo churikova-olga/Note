@@ -1,0 +1,107 @@
+<%- include('./partials/header.ejs') %>
+
+<%for (let i = 0; i < note.length; i++) {%>
+<div class="mydiv" style="top: <%=Math.floor(Math.random() * 600)+60%>px; left: <%=Math.floor(Math.random() * 1400)%>px">
+    <!--Include a header DIV with the same name as the draggable DIV, followed by "header":-->
+    <div class="mydivheader" style="display: flex; justify-content: space-between">
+        <%=note[i].title%>
+        <div class="btn-group dropend">
+            <button type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                    style="background: none; border: none"><img src="./img/menu.png" alt="" width="20" height="24" >
+            </button>
+            <ul class="dropdown-menu">
+                <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#<%=note[i].title.replace(/\s+/g,'')+note[i].idNote%>">Посмотреть</button></li>
+                <li><a class="dropdown-item" href="/edit/<%=note[i].idNote%>">Изменить</a></li>
+                <li><a class="dropdown-item" href="/add/comment/<%=note[i].idNote%>">Добавить комментарий</a></li>
+                <li><form method="post" action="/delete/<%=note[i].idNote%>"><button type="submit" class="dropdown-item" >Удалить</button></form></li>
+            </ul>
+        </div>
+    </div>
+    <p><%=note[i].description%></p>
+</div>
+
+<div class="modal fade" id="<%=note[i].title.replace(/\s+/g,'')+note[i].idNote%>" tabindex="-1" aria-labelledby="<%=note[i].title.replace(/\s+/g,'')+note[i].idNote%>" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="<%=note[i].title.replace(/\s+/g,'')+note[i].idNote%>"> <%=note[i].title%>  </h5>
+                <div><%=note[i].new_dateNote%>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+            </div>
+            <div class="modal-body">
+                <%=note[i].description%>
+            </div>
+            <hr style="margin: 0px;">
+            <div class="modal-body">
+                <h5 class="modal-title" style="margin-bottom: 20px" >Комментарии</h5>
+                <%for (let j = 0; j < comments[i].length; j++) {%>
+                    <div style="display: flex; justify-content: space-between; width: 100%"> <div style="overflow-x:hidden; max-width: 80%"> <%=comments[i][j].message%></div> <div> <%=comments[i][j].new_date%> </div></div>
+                    <hr>
+                <%}%>
+                <div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<%}%>
+<!--<form id="registerForm">-->
+<!--    <div class="modal-body">-->
+<!--        <h5 class="modal-title" style="margin-bottom: 20px"> Добавить комментарий</h5>-->
+<!--        <textarea name="message" rows="5" style="width: 100%"></textarea>-->
+<!--    </div>-->
+
+<!--    <div class="modal-footer">-->
+<!--        <input type="submit" name="send" class="btn btn-primary" value="Добавить комментарий">-->
+<!--    </div>-->
+<!--</form>-->
+<script>
+    const elArr = document.getElementsByClassName("mydiv")
+    for (let i = 0; i < elArr.length; i++) {
+        dragElement(elArr[i]);
+    }
+    function dragElement(elmnt) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById(elmnt.id + "header")) {
+            /* if present, the header is where you move the DIV from:*/
+            document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+        } else {
+            /* otherwise, move the DIV from anywhere inside the DIV:*/
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+
+
+    }
+
+</script>
